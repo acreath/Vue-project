@@ -37,6 +37,8 @@ export default {
         background-color: #373D41;
 
     }
+
+    
     .el-aside {
         background-color: #333744;
     }
