@@ -18,7 +18,7 @@
                 <!-- 侧边栏菜单区 -->
                 <el-menu background-color="#333744" text-color="#fff"
                 active-text-color="#409eff" :unique-opened="true" :collapse="isCollapse" 
-                :collapse-transition="false" :router="true">
+                :collapse-transition="false" :router="true" :default-active="activePath">
                     <!-- 一级菜单 -->
                     <el-submenu :index="item.id +''" v-for = "item in menulist" :key ="item.id">
                         <!-- 一级菜单的模板区 -->
@@ -30,7 +30,7 @@
                         </template>
                         <!-- 二级菜单 -->
                         <el-menu-item :index="'/' + subitem.path" v-for="subitem in item.children"
-                        :key="subitem.id">
+                        :key="subitem.id" @click="saveNavState('/' + subitem.path)">
                             <template slot="title">
                                 <!-- 图标 -->
                                 <i class="el-icon-menu"></i>
@@ -67,12 +67,15 @@ export default {
                 '102':'iconfont el-icon-s-order',
                 '145':'iconfont el-icon-s-data'
             },
-            isCollapse: false
+            isCollapse: false,
+            // 被激活的链接地址
+            activePath: ''
         }
     },
 
     created() {
         this.getMenuList()
+        this.activePath = window.sessionStorage.getItem('activePath')
     },
     methods:{
         logout() {
@@ -91,6 +94,11 @@ export default {
         toggleCollapse() {
             this.isCollapse = !this.isCollapse
             
+        },
+        // 保存链接的激活状态
+        saveNavState(activePath) {
+            window.sessionStorage.setItem('activePath', activePath)
+            this.activePath = activePath
         }
     }
 }
