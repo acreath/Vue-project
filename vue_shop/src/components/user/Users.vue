@@ -25,13 +25,42 @@
 
             <!-- 用户列表区域 -->
             <el-table :data="userlist" border stripe>
+                <!-- 第一列为索引列 -->
+                <el-table-column type="index"></el-table-column>
                 <el-table-column label="姓名" prop="username"></el-table-column>
                 <el-table-column label="邮箱" prop="email"></el-table-column>
                 <el-table-column label="角色" prop="role_name"></el-table-column>
                 <el-table-column label="电话" prop="mobile"></el-table-column>
-                <el-table-column label="状态" prop="mg_state"></el-table-column>
-                <el-table-column label="操作" ></el-table-column>    
+                <el-table-column label="状态" >
+                    <!-- 作用域插槽，通过scope.row获取这一行的数据，不再需要prop -->
+                    <template slot-scope="scope">
+                        <el-switch v-model="scope.row.mg_state">
+                        </el-switch>
+                        
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" >
+                    <template slot-scope="scope">
+                        <el-button type="primary" icon="el-icon-edit" size="mini"></el-button>
+                        <el-button type="danger" icon="el-icon-delete" size="mini"></el-button>
+                        <!-- Tooltip 消息提示组件 -->
+                        <el-tooltip effect="dark" content="分配角色" placement="top" :enterable="false">
+                            <el-button type="warning" icon="el-icon-setting" size="mini"></el-button>
+                        </el-tooltip>
+                    </template>
+                
+                </el-table-column>    
             </el-table>
+            <!-- 分页区域 -->
+            <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="queryInfo.pagenum"
+                :page-sizes="[1, 2, 5, 10]"
+                :page-size="queryInfo.pagesize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total">
+            </el-pagination>
         </el-card>
     </div>
 </template>
@@ -62,6 +91,20 @@ export default {
            this.userlist = res.data.users 
            this.total = res.data.total
 
+        },
+
+        handleSizeChange(newSize) {
+            //监听pagesize改变的事件
+            console.log(newSize)
+            this.queryInfo.pagesize = newSize
+            this.getUserList()
+        },
+
+        handleCurrentChange(newPage) {
+            //监听 页码值 改变的事件
+            console.log(newPage)
+            this.queryInfo.pagenum = newPage
+            this.getUserList()
         }
     }
 }
