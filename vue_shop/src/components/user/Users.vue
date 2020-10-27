@@ -69,7 +69,7 @@
             title="添加用户"
             :visible.sync="addDialogVisible"
             width="50%"
-            :before-close="handleClose" @close="addDialogClosed">
+            @close="addDialogClosed">
             <!-- 内容主体区 -->
             <el-form :model="addForm" :rules="addFormRules" ref="addFormRef" label-width="70px" >
                 <el-form-item label="用户名" prop="username">
@@ -88,7 +88,7 @@
             <!-- 底部区 -->
             <span slot="footer" class="dialog-footer">
                 <el-button @click="addDialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="addDialogVisible = false">确 定</el-button>
+                <el-button type="primary" @click="addUser">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -200,6 +200,13 @@ export default {
         //监听用户对话框的关闭事件
         addDialogClosed() {
             this.$refs.addFormRef.resetFields()
+        },
+
+        addUser() {
+            this.$refs.addFormRef.validate(valid => {
+                if (!valid) return
+                //可以发起添加用户的网络请求
+            })
         }
     }
 }
