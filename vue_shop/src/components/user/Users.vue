@@ -203,9 +203,20 @@ export default {
         },
 
         addUser() {
-            this.$refs.addFormRef.validate(valid => {
+            this.$refs.addFormRef.validate(async valid => {
                 if (!valid) return
                 //可以发起添加用户的网络请求
+                const {data: res} = await this.$http.post('users',this.addForm)
+                if(res.meta.status !== 201) {
+                    this.$message.error('添加用户失败！')
+
+                }
+
+                this.$message.success('添加用户成功！')
+                //隐藏添加用户对话框
+                this.addDialogVisible = false
+                //重新获取用户列表数据
+                this.getUserList()
             })
         }
     }
