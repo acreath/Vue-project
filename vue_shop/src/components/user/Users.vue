@@ -44,7 +44,7 @@
                         <!-- 修改按钮 -->
                         <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.row.id)"></el-button>
                         <!-- 删除按钮 -->
-                        <el-button type="danger" icon="el-icon-delete" size="mini"></el-button>
+                        <el-button type="danger" icon="el-icon-delete" size="mini" @click="removeUserById(scope.row.id)"></el-button>
                         <!-- Tooltip 消息提示组件 -->
                         <!-- 分配角色按钮 -->
                         <el-tooltip effect="dark" content="分配角色" placement="top" :enterable="false">
@@ -310,6 +310,35 @@ export default {
                 //重新获取用户列表数据
                 this.getUserList()
             })
+        },
+        // 根据用户id删除用户信息
+        async removeUserById(id) {
+            //弹框询问用户是否删除数据
+            const confirmResult = await this.$confirm('此操作将永久用户信息, 是否继续?', '提示', 
+                {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }
+            ).catch(err => {
+                    return err
+                }
+            )
+            //如果用户确认删除，则返回值为字符串 comfirm
+            //如果用户取消删除，则返回值为字符串 cancel
+            if(confirmResult !== 'confirm' ){
+                return this.$message.info('已经取消删除')
+            }
+
+            const {data : res} = await this.$http.delete('users/'+ id )
+            if(res.meta.status !== 200) {
+                return this.$message.error('删除用户失败')
+            }
+
+            return this.$message.success('删除用户成功')
+            this.getUserList()
+            this.queryInfo.pagenum = 1
+            
         }
 
     }
