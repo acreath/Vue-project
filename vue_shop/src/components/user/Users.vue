@@ -247,7 +247,7 @@ export default {
 
         },
 
-        //监听用户对话框的关闭事件
+        //监听添加用户对话框的关闭事件
         addDialogClosed() {
             this.$refs.addFormRef.resetFields()
         },
